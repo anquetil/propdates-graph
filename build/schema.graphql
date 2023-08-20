@@ -1,0 +1,29 @@
+type PostUpdate @entity(immutable: true) {
+  id: Bytes!
+  propId: BigInt! # uint256
+  isCompleted: Boolean! # bool
+  update: String! # string
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type PropUpdateAdminTransferStarted @entity(immutable: true) {
+  id: Bytes!
+  propId: BigInt! # uint256
+  oldAdmin: Bytes! # address
+  newAdmin: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type PropUpdateAdminTransfered @entity(immutable: true) {
+  id: Bytes!
+  propId: BigInt! # uint256
+  oldAdmin: Bytes! # address
+  newAdmin: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}

@@ -1,0 +1,30 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Propdates
+    network: mainnet
+    source:
+      address: "0x94b4fb16893C0Fb4E470eEf2559C24FD87FEd5F1"
+      abi: Propdates
+      startBlock: 17514928
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - PostUpdate
+        - PropUpdateAdminTransferStarted
+        - PropUpdateAdminTransfered
+      abis:
+        - name: Propdates
+          file: ./abis/Propdates.json
+      eventHandlers:
+        - event: PostUpdate(indexed uint256,indexed bool,string)
+          handler: handlePostUpdate
+        - event: PropUpdateAdminTransferStarted(indexed uint256,indexed address,indexed address)
+          handler: handlePropUpdateAdminTransferStarted
+        - event: PropUpdateAdminTransfered(indexed uint256,indexed address,indexed address)
+          handler: handlePropUpdateAdminTransfered
+      file: ./src/propdates.ts
