@@ -1,5 +1,6 @@
 type PostUpdate @entity(immutable: true) {
   id: Bytes!
+  from: String! # string
   propId: BigInt! # uint256
   isCompleted: Boolean! # bool
   update: String! # string

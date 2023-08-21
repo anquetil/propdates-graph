@@ -13,6 +13,7 @@ export function handlePostUpdate(event: PostUpdateEvent): void {
   let entity = new PostUpdate(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
+  entity.from = event.transaction.from.toHexString()
   entity.propId = event.params.propId
   entity.isCompleted = event.params.isCompleted
   entity.update = event.params.update

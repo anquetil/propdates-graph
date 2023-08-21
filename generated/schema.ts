@@ -54,6 +54,19 @@ export class PostUpdate extends Entity {
     this.set("id", Value.fromBytes(value));
   }
 
+  get from(): string {
+    let value = this.get("from");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set from(value: string) {
+    this.set("from", Value.fromString(value));
+  }
+
   get propId(): BigInt {
     let value = this.get("propId");
     if (!value || value.kind == ValueKind.NULL) {
