@@ -1,12 +1,12 @@
-type PostUpdate @entity(immutable: true) {
-  id: Bytes!
-  from: String! # string
-  propId: BigInt! # uint256
-  isCompleted: Boolean! # bool
-  update: String! # string
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+type PropUpdate @entity(immutable: true) {
+   id: Bytes!
+   admin: Bytes! # address, at time of post
+   prop: Proposal
+   update: String! # string
+   isCompleted: Boolean! # bool
+   blockNumber: BigInt!
+   blockTimestamp: BigInt!
+   transactionHash: Bytes!
 }
 
 type PropUpdateAdminTransferStarted @entity(immutable: true) {
@@ -27,4 +27,13 @@ type PropUpdateAdminTransfered @entity(immutable: true) {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+}
+
+type Proposal @entity(immutable: false){
+   id: String! # propId
+   admin: Bytes! # address
+   isCompleted: Boolean! # bool
+   transferPending: Boolean! # bool
+   pendingAdmin: Bytes! # address
+   updates: [PropUpdate!]! @derivedFrom(field: "prop")
 }

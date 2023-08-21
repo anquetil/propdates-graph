@@ -1,45 +1,63 @@
+import { Address, BigInt } from "@graphprotocol/graph-ts";
 import {
   PostUpdate as PostUpdateEvent,
   PropUpdateAdminTransferStarted as PropUpdateAdminTransferStartedEvent,
   PropUpdateAdminTransfered as PropUpdateAdminTransferedEvent
 } from "../generated/Propdates/Propdates"
 import {
-  PostUpdate,
+  PropUpdate,
   PropUpdateAdminTransferStarted,
-  PropUpdateAdminTransfered
+  PropUpdateAdminTransfered,
+  Proposal
 } from "../generated/schema"
 
+const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
+
+
 export function handlePostUpdate(event: PostUpdateEvent): void {
-  let entity = new PostUpdate(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.from = event.transaction.from.toHexString()
-  entity.propId = event.params.propId
-  entity.isCompleted = event.params.isCompleted
-  entity.update = event.params.update
+   let entity = new PropUpdate(
+      event.transaction.hash.concatI32(event.logIndex.toI32())
+   )
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+   let proposal = getOrCreateProposal(event.params.propId)
+   if(event.params.isCompleted){
+      proposal.isCompleted = event.params.isCompleted
+   }
+   proposal.save()
 
-  entity.save()
+   entity.admin = proposal.admin
+   entity.prop = proposal.id   
+   entity.update = event.params.update
+   entity.isCompleted = event.params.isCompleted
+
+   entity.blockNumber = event.block.number
+   entity.blockTimestamp = event.block.timestamp
+   entity.transactionHash = event.transaction.hash
+
+   entity.save()
 }
 
 export function handlePropUpdateAdminTransferStarted(
-  event: PropUpdateAdminTransferStartedEvent
+   event: PropUpdateAdminTransferStartedEvent
 ): void {
-  let entity = new PropUpdateAdminTransferStarted(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.propId = event.params.propId
-  entity.oldAdmin = event.params.oldAdmin
-  entity.newAdmin = event.params.newAdmin
+   let entity = new PropUpdateAdminTransferStarted(
+      event.transaction.hash.concatI32(event.logIndex.toI32())
+   )
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+   let proposal = getOrCreateProposal(event.params.propId)
+   proposal.transferPending = true
+   proposal.pendingAdmin = event.params.newAdmin
+   proposal.save()
 
-  entity.save()
+   entity.propId = event.params.propId
+   entity.oldAdmin = event.params.oldAdmin
+   entity.newAdmin = event.params.newAdmin
+
+   entity.blockNumber = event.block.number
+   entity.blockTimestamp = event.block.timestamp
+   entity.transactionHash = event.transaction.hash
+
+   entity.save()
 }
 
 export function handlePropUpdateAdminTransfered(
@@ -48,13 +66,34 @@ export function handlePropUpdateAdminTransfered(
   let entity = new PropUpdateAdminTransfered(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
-  entity.propId = event.params.propId
-  entity.oldAdmin = event.params.oldAdmin
-  entity.newAdmin = event.params.newAdmin
+   let proposal = getOrCreateProposal(event.params.propId)
+   proposal.transferPending = false
+   proposal.admin = event.params.newAdmin
+   proposal.pendingAdmin = Address.fromString(ZERO_ADDRESS)
+   proposal.save()
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+   entity.propId = event.params.propId
+   entity.oldAdmin = event.params.oldAdmin
+   entity.newAdmin = event.params.newAdmin
 
-  entity.save()
+   entity.blockNumber = event.block.number
+   entity.blockTimestamp = event.block.timestamp
+   entity.transactionHash = event.transaction.hash
+
+   entity.save()
+}
+
+function getOrCreateProposal(propId: BigInt): Proposal{
+   let proposal = Proposal.load(propId.toString())
+   if(proposal == null){
+      proposal = new Proposal(propId.toString())
+      proposal.id = propId.toString()
+      proposal.admin = Address.fromString(ZERO_ADDRESS)
+      proposal.isCompleted = false
+      proposal.transferPending = false
+      proposal.pendingAdmin = Address.fromString(ZERO_ADDRESS)
+      proposal.save()
+      return proposal
+   } 
+   return proposal
 }
