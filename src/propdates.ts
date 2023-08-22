@@ -10,6 +10,9 @@ import {
   PropUpdateAdminTransfered,
   Proposal
 } from "../generated/schema"
+import {
+   createProposal
+} from './contract'
 
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
@@ -19,7 +22,7 @@ export function handlePostUpdate(event: PostUpdateEvent): void {
       event.transaction.hash.concatI32(event.logIndex.toI32())
    )
 
-   let proposal = getOrCreateProposal(event.params.propId)
+   let proposal = getProposal(event.params.propId)
    if(event.params.isCompleted){
       proposal.isCompleted = event.params.isCompleted
    }
@@ -44,7 +47,7 @@ export function handlePropUpdateAdminTransferStarted(
       event.transaction.hash.concatI32(event.logIndex.toI32())
    )
 
-   let proposal = getOrCreateProposal(event.params.propId)
+   let proposal = getProposal(event.params.propId)
    proposal.transferPending = true
    proposal.pendingAdmin = event.params.newAdmin
    proposal.save()
@@ -66,7 +69,7 @@ export function handlePropUpdateAdminTransfered(
   let entity = new PropUpdateAdminTransfered(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
-   let proposal = getOrCreateProposal(event.params.propId)
+   let proposal = getProposal(event.params.propId)
    proposal.transferPending = false
    proposal.admin = event.params.newAdmin
    proposal.pendingAdmin = Address.fromString(ZERO_ADDRESS)
@@ -83,17 +86,13 @@ export function handlePropUpdateAdminTransfered(
    entity.save()
 }
 
-function getOrCreateProposal(propId: BigInt): Proposal{
+function getProposal(propId: BigInt): Proposal{
    let proposal = Proposal.load(propId.toString())
-   if(proposal == null){
-      proposal = new Proposal(propId.toString())
-      proposal.id = propId.toString()
-      proposal.admin = Address.fromString(ZERO_ADDRESS)
-      proposal.isCompleted = false
-      proposal.transferPending = false
-      proposal.pendingAdmin = Address.fromString(ZERO_ADDRESS)
-      proposal.save()
+   if(proposal == null){ 
+      // this should never happen
+      // can't be a getProposal call before a ProposalCreated call for a given propId
+      proposal = createProposal(propId, Address.fromString(ZERO_ADDRESS))
       return proposal
-   } 
+   }
    return proposal
 }

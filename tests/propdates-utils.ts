@@ -3,7 +3,7 @@ import { ethereum, BigInt, Address } from "@graphprotocol/graph-ts"
 import {
   PostUpdate,
   PropUpdateAdminTransferStarted,
-  PropUpdateAdminTransfered
+  PropUpdateAdminTransfered,
 } from "../generated/Propdates/Propdates"
 
 export function createPostUpdateEvent(

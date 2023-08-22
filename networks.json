@@ -3,6 +3,9 @@
     "Propdates": {
       "address": "0x94b4fb16893C0Fb4E470eEf2559C24FD87FEd5F1",
       "startBlock": 17514928
+    },
+    "Contract": {
+      "address": "0x6f3E6272A167e8AcCb32072d08E0957F9c79223d"
     }
   }
 }

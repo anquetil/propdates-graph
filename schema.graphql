@@ -32,6 +32,7 @@ type PropUpdateAdminTransfered @entity(immutable: true) {
 type Proposal @entity(immutable: false){
    id: String! # propId
    admin: Bytes! # address
+   proposer: Bytes! # address
    isCompleted: Boolean! # bool
    transferPending: Boolean! # bool
    pendingAdmin: Bytes! # address

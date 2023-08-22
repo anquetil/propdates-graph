@@ -456,6 +456,19 @@ export class Proposal extends Entity {
     this.set("admin", Value.fromBytes(value));
   }
 
+  get proposer(): Bytes {
+    let value = this.get("proposer");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set proposer(value: Bytes) {
+    this.set("proposer", Value.fromBytes(value));
+  }
+
   get isCompleted(): boolean {
     let value = this.get("isCompleted");
     if (!value || value.kind == ValueKind.NULL) {
