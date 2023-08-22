@@ -443,6 +443,19 @@ export class Proposal extends Entity {
     this.set("id", Value.fromString(value));
   }
 
+  get title(): string {
+    let value = this.get("title");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set title(value: string) {
+    this.set("title", Value.fromString(value));
+  }
+
   get admin(): Bytes {
     let value = this.get("admin");
     if (!value || value.kind == ValueKind.NULL) {

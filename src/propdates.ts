@@ -1,4 +1,4 @@
-import { Address, BigInt } from "@graphprotocol/graph-ts";
+import { Address, BigInt, log } from "@graphprotocol/graph-ts";
 import {
   PostUpdate as PostUpdateEvent,
   PropUpdateAdminTransferStarted as PropUpdateAdminTransferStartedEvent,
@@ -10,9 +10,6 @@ import {
   PropUpdateAdminTransfered,
   Proposal
 } from "../generated/schema"
-import {
-   createProposal
-} from './contract'
 
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
@@ -91,8 +88,10 @@ function getProposal(propId: BigInt): Proposal{
    if(proposal == null){ 
       // this should never happen
       // can't be a getProposal call before a ProposalCreated call for a given propId
-      proposal = createProposal(propId, Address.fromString(ZERO_ADDRESS))
-      return proposal
+      log.error('Proposal {} not found on getProposal.', [
+         propId.toString(),
+      ]);
+      return new Proposal(propId.toString())
    }
    return proposal
 }

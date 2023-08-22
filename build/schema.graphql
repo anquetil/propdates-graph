@@ -31,6 +31,7 @@ type PropUpdateAdminTransfered @entity(immutable: true) {
 
 type Proposal @entity(immutable: false){
    id: String! # propId
+   title: String! # propName
    admin: Bytes! # address
    proposer: Bytes! # address
    isCompleted: Boolean! # bool
