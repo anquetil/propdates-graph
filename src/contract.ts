@@ -11,7 +11,7 @@ const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 export function handleProposalCreated(event: ProposalCreatedEvent): void {
    let proposal = new Proposal(event.params.id.toString())
    proposal.id = event.params.id.toString()
-   proposal.title = extractTitle(event.params.description)
+   proposal.title = extractTitle(event.params.description.split('\\n').join('\n'))
    proposal.admin = Address.fromString(ZERO_ADDRESS)
    proposal.proposer = event.params.proposer
    proposal.isCompleted = false
@@ -26,12 +26,7 @@ function extractTitle(description: string): string {
    if (splitDescription.length > 1) {
       splitDescription.shift(); // Remove any characters before `#`
    }
-   let title = ''
-   if (splitDescription.includes("\n\n")){
-      title = splitDescription.join('').split('\\n', 1).join('').trim();
-   } else {
-      title = splitDescription.join('').split('\n', 1).join('').trim();
-   }
+   let title = splitDescription.join('').split('\n', 1).join('').trim();
 
    // Remove bold and italics
    title = title.replaceAll('**', '').replaceAll('__', '');
