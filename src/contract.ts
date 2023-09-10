@@ -26,7 +26,12 @@ function extractTitle(description: string): string {
    if (splitDescription.length > 1) {
       splitDescription.shift(); // Remove any characters before `#`
    }
-   let title = splitDescription.join('').split('\\n', 1).join('').trim();
+   let title = ''
+   if (splitDescription.includes("\n\n")){
+      title = splitDescription.join('').split('\\n', 1).join('').trim();
+   } else {
+      title = splitDescription.join('').split('\n', 1).join('').trim();
+   }
 
    // Remove bold and italics
    title = title.replaceAll('**', '').replaceAll('__', '');
