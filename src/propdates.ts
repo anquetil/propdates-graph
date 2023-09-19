@@ -25,6 +25,7 @@ export function handlePostUpdate(event: PostUpdateEvent): void {
    }
    proposal.save()
 
+   entity.hash = event.transaction.hash;
    entity.admin = proposal.admin
    entity.prop = proposal.id   
    entity.update = event.params.update

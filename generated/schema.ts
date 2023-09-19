@@ -54,6 +54,19 @@ export class PropUpdate extends Entity {
     this.set("id", Value.fromBytes(value));
   }
 
+  get hash(): Bytes {
+    let value = this.get("hash");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set hash(value: Bytes) {
+    this.set("hash", Value.fromBytes(value));
+  }
+
   get admin(): Bytes {
     let value = this.get("admin");
     if (!value || value.kind == ValueKind.NULL) {

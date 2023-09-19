@@ -1,5 +1,6 @@
 type PropUpdate @entity(immutable: true) {
    id: Bytes!
+   hash: Bytes!
    admin: Bytes! # address, at time of post
    prop: Proposal
    update: String! # string
