@@ -84,7 +84,7 @@ export function handlePropUpdateAdminTransfered(
    entity.save()
 }
 
-function getProposal(propId: BigInt): Proposal{
+export function getProposal(propId: BigInt): Proposal{
    let proposal = Proposal.load(propId.toString())
    if(proposal == null){ 
       // this should never happen

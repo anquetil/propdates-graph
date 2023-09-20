@@ -534,6 +534,19 @@ export class Proposal extends Entity {
     this.set("pendingAdmin", Value.fromBytes(value));
   }
 
+  get executed(): boolean {
+    let value = this.get("executed");
+    if (!value || value.kind == ValueKind.NULL) {
+      return false;
+    } else {
+      return value.toBoolean();
+    }
+  }
+
+  set executed(value: boolean) {
+    this.set("executed", Value.fromBoolean(value));
+  }
+
   get updates(): PropUpdateLoader {
     return new PropUpdateLoader(
       "Proposal",

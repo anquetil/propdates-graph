@@ -1,10 +1,12 @@
-import { Address, Bytes, BigInt } from "@graphprotocol/graph-ts"
+import { Address, Bytes, BigInt, log } from "@graphprotocol/graph-ts"
 import {
-   ProposalCreated as ProposalCreatedEvent
+   ProposalCreated as ProposalCreatedEvent,
+   ProposalExecuted as ProposalExecutedEvent
 } from "../generated/Contract/Contract"
 import {
    Proposal,
 } from "../generated/schema"
+import { getProposal } from "./propdates";
 
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
@@ -17,6 +19,13 @@ export function handleProposalCreated(event: ProposalCreatedEvent): void {
    proposal.isCompleted = false
    proposal.transferPending = false
    proposal.pendingAdmin = Address.fromString(ZERO_ADDRESS)
+   proposal.executed = false
+   proposal.save()
+}
+
+export function handleProposalExecuted(event: ProposalExecutedEvent): void {
+   let proposal = getProposal(event.params.id)
+   proposal.executed = true;
    proposal.save()
 }
 

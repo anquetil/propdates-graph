@@ -38,5 +38,6 @@ type Proposal @entity(immutable: false){
    isCompleted: Boolean! # bool
    transferPending: Boolean! # bool
    pendingAdmin: Bytes! # address
+   executed: Boolean! # bool
    updates: [PropUpdate!]! @derivedFrom(field: "prop")
 }
