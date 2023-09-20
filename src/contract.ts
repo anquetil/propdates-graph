@@ -6,7 +6,6 @@ import {
 import {
    Proposal,
 } from "../generated/schema"
-import { getProposal } from "./propdates";
 
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
@@ -27,6 +26,20 @@ export function handleProposalExecuted(event: ProposalExecutedEvent): void {
    let proposal = getProposal(event.params.id)
    proposal.executed = true;
    proposal.save()
+}
+
+function getProposal(propId: BigInt): Proposal {
+   let proposal = Proposal.load(propId.toString())
+   if (proposal == null) {
+      // this should never happen
+      // can't be a getProposal call before a ProposalCreated call for a given propId
+      log.error('Proposal {} not found on getProposal.', [
+         propId.toString(),
+      ]);
+      return new Proposal(propId.toString())
+   }
+   log.info('in getProposal, found {}', [proposal.id])
+   return proposal
 }
 
 function extractTitle(description: string): string {
