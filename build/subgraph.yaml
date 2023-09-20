@@ -41,10 +41,13 @@ dataSources:
       language: wasm/assemblyscript
       entities:
         - ProposalCreated
+        - ProposalExecuted
       abis:
         - name: Contract
           file: Contract/abis/Contract.json
       eventHandlers:
         - event: ProposalCreated(uint256,address,address[],uint256[],string[],bytes[],uint256,uint256,string)
           handler: handleProposalCreated
+        - event: ProposalExecuted(uint256)
+          handler: handleProposalExecuted
       file: Contract/Contract.wasm
