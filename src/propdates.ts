@@ -23,7 +23,7 @@ export function handlePostUpdate(event: PostUpdateEvent): void {
    proposal.save()
 
    let entity = new PropUpdate(
-      Bytes.fromHexString(proposal.id.concat('-').concat(updatecount.toString()))
+      proposal.id.concat('-').concat(updatecount.toString())
    )
 
    entity.hash = event.transaction.hash;

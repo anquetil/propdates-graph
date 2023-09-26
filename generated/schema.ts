@@ -12,9 +12,9 @@ import {
 } from "@graphprotocol/graph-ts";
 
 export class PropUpdate extends Entity {
-  constructor(id: Bytes) {
+  constructor(id: string) {
     super();
-    this.set("id", Value.fromBytes(id));
+    this.set("id", Value.fromString(id));
   }
 
   save(): void {
@@ -22,36 +22,32 @@ export class PropUpdate extends Entity {
     assert(id != null, "Cannot save PropUpdate entity without an ID");
     if (id) {
       assert(
-        id.kind == ValueKind.BYTES,
-        `Entities of type PropUpdate must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        id.kind == ValueKind.STRING,
+        `Entities of type PropUpdate must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("PropUpdate", id.toBytes().toHexString(), this);
+      store.set("PropUpdate", id.toString(), this);
     }
   }
 
-  static loadInBlock(id: Bytes): PropUpdate | null {
-    return changetype<PropUpdate | null>(
-      store.get_in_block("PropUpdate", id.toHexString())
-    );
+  static loadInBlock(id: string): PropUpdate | null {
+    return changetype<PropUpdate | null>(store.get_in_block("PropUpdate", id));
   }
 
-  static load(id: Bytes): PropUpdate | null {
-    return changetype<PropUpdate | null>(
-      store.get("PropUpdate", id.toHexString())
-    );
+  static load(id: string): PropUpdate | null {
+    return changetype<PropUpdate | null>(store.get("PropUpdate", id));
   }
 
-  get id(): Bytes {
+  get id(): string {
     let value = this.get("id");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
-      return value.toBytes();
+      return value.toString();
     }
   }
 
-  set id(value: Bytes) {
-    this.set("id", Value.fromBytes(value));
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
   }
 
   get hash(): Bytes {
@@ -550,9 +546,7 @@ export class Proposal extends Entity {
   get updates(): PropUpdateLoader {
     return new PropUpdateLoader(
       "Proposal",
-      this.get("id")!
-        .toBytes()
-        .toHexString(),
+      this.get("id")!.toString(),
       "updates"
     );
   }
