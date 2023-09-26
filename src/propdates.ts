@@ -23,6 +23,7 @@ export function handlePostUpdate(event: PostUpdateEvent): void {
    if(event.params.isCompleted){
       proposal.isCompleted = event.params.isCompleted
    }
+   let updatecount = proposal.updates.entries.length
    proposal.save()
 
    entity.hash = event.transaction.hash;
@@ -30,7 +31,7 @@ export function handlePostUpdate(event: PostUpdateEvent): void {
    entity.prop = proposal.id   
    entity.update = event.params.update
    entity.isCompleted = event.params.isCompleted
-
+   entity.uuid = proposal.id.concat('-').concat(updatecount.toString())
    entity.blockNumber = event.block.number
    entity.blockTimestamp = event.block.timestamp
    entity.transactionHash = event.transaction.hash
