@@ -161,19 +161,6 @@ export class PropUpdate extends Entity {
   set transactionHash(value: Bytes) {
     this.set("transactionHash", Value.fromBytes(value));
   }
-
-  get uuid(): string {
-    let value = this.get("uuid");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toString();
-    }
-  }
-
-  set uuid(value: string) {
-    this.set("uuid", Value.fromString(value));
-  }
 }
 
 export class PropUpdateAdminTransferStarted extends Entity {

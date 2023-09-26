@@ -8,7 +8,6 @@ type PropUpdate @entity(immutable: true) {
    blockNumber: BigInt!
    blockTimestamp: BigInt!
    transactionHash: Bytes!
-   uuid: String! # [propId]-[postId]
 }
 
 type PropUpdateAdminTransferStarted @entity(immutable: true) {
