@@ -19,6 +19,7 @@ export function handleProposalCreated(event: ProposalCreatedEvent): void {
    proposal.transferPending = false
    proposal.pendingAdmin = Address.fromString(ZERO_ADDRESS)
    proposal.executed = false
+   proposal.count = BigInt.fromI32(0)
    proposal.save()
 }
 

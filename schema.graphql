@@ -1,5 +1,5 @@
 type PropUpdate @entity(immutable: true) {
-   id: String!
+   id: ID!
    hash: Bytes!
    admin: Bytes! # address, at time of post
    prop: Proposal
@@ -40,4 +40,5 @@ type Proposal @entity(immutable: false){
    pendingAdmin: Bytes! # address
    executed: Boolean! # bool
    updates: [PropUpdate!]! @derivedFrom(field: "prop")
+   count: BigInt!
 }
