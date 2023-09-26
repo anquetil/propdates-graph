@@ -1,4 +1,4 @@
-import { Address, BigInt, log } from "@graphprotocol/graph-ts";
+import { Address, BigInt, Bytes, log } from "@graphprotocol/graph-ts";
 import {
   PostUpdate as PostUpdateEvent,
   PropUpdateAdminTransferStarted as PropUpdateAdminTransferStartedEvent,
@@ -15,10 +15,6 @@ const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
 
 export function handlePostUpdate(event: PostUpdateEvent): void {
-   let entity = new PropUpdate(
-      event.transaction.hash.concatI32(event.logIndex.toI32())
-   )
-
    let proposal = getProposal(event.params.propId)
    if(event.params.isCompleted){
       proposal.isCompleted = event.params.isCompleted
@@ -26,12 +22,15 @@ export function handlePostUpdate(event: PostUpdateEvent): void {
    let updatecount = proposal.updates.entries.length
    proposal.save()
 
+   let entity = new PropUpdate(
+      Bytes.fromHexString(proposal.id.concat('-').concat(updatecount.toString()))
+   )
+
    entity.hash = event.transaction.hash;
    entity.admin = proposal.admin
    entity.prop = proposal.id   
    entity.update = event.params.update
    entity.isCompleted = event.params.isCompleted
-   entity.uuid = proposal.id.concat('-').concat(updatecount.toString())
    entity.blockNumber = event.block.number
    entity.blockTimestamp = event.block.timestamp
    entity.transactionHash = event.transaction.hash
