@@ -19,12 +19,12 @@ export function handlePostUpdate(event: PostUpdateEvent): void {
    if(event.params.isCompleted){
       proposal.isCompleted = event.params.isCompleted
    }
-   let oldCount = proposal.count;
-   proposal.count = BigInt.fromI32(oldCount.toI32() + 1);
+   let newCount = BigInt.fromI32(proposal.count.toI32() + 1);
+   proposal.count = newCount
    proposal.save()
 
    let entity = new PropUpdate(
-      proposal.id.concat('-').concat(oldCount.toString())
+      proposal.id.concat('-').concat(newCount.toString())
    )
 
    entity.hash = event.transaction.hash;
