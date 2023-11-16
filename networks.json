@@ -1,11 +1,31 @@
+
 {
-  "mainnet": {
-    "Propdates": {
-      "address": "0x94b4fb16893C0Fb4E470eEf2559C24FD87FEd5F1",
-      "startBlock": 17514928
-    },
-    "Contract": {
-      "address": "0x6f3E6272A167e8AcCb32072d08E0957F9c79223d"
-    }
-  }
+   "note": "just for refenerce, these need to be ported over to subgraph.yaml",
+   "mainnet": {
+      "Propdates": {
+         "address": "0x94b4fb16893C0Fb4E470eEf2559C24FD87FEd5F1",
+         "startBlock": 17514928
+      },
+      "NounsDAO": {
+         "address": "0x6f3E6272A167e8AcCb32072d08E0957F9c79223d"
+      },
+      "PropdatesV2": {
+         "address": "0x4675C7e5BaAFBFFbca748158bEcBA61ef3b0a263",
+         "startBlock": 17514928
+      }
+   },
+   "sepolia": {
+      "Propdates": {
+         "address": "0xb06813FbE1Ff52DCef4F425bD5b4f17a79D7b4D8",
+         "startBlock": 4704334
+      },
+      "NounsDAO": {
+         "address": "0x35d2670d7C8931AACdd37C89Ddcb0638c3c44A57",
+         "startBlock": 3594849
+      },
+      "PropdatesV2": {
+         "address": "0x4675C7e5BaAFBFFbca748158bEcBA61ef3b0a263",
+         "startBlock": 17514928
+      }
+   }
 }

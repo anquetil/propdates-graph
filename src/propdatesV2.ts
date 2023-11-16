@@ -1,16 +1,15 @@
 import { Address, BigInt, log } from "@graphprotocol/graph-ts";
 import {
   PostUpdate as PostUpdateEvent,
-  PropUpdateAdminTransferStarted as PropUpdateAdminTransferStartedEvent,
+  PropUpdateAdminRecovered as PropUpdateAdminRecoveredEvent,
   PropUpdateAdminTransfered as PropUpdateAdminTransferedEvent
-} from "../generated/Propdates/Propdates"
+} from "../generated/PropdatesV2/PropdatesV2"
 import {
   PropUpdate,
   Proposal
 } from "../generated/schema"
 
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
-
 
 export function handlePostUpdate(event: PostUpdateEvent): void {
    let proposal = getProposal(event.params.propId)
@@ -37,12 +36,14 @@ export function handlePostUpdate(event: PostUpdateEvent): void {
    entity.save()
 }
 
-export function handlePropUpdateAdminTransferStarted(
-   event: PropUpdateAdminTransferStartedEvent
+export function handlePropUpdateAdminRecovered(
+   event: PropUpdateAdminRecoveredEvent
 ): void {
    let proposal = getProposal(event.params.propId)
-   proposal.transferPending = true
-   proposal.pendingAdmin = event.params.newAdmin
+   proposal.transferPending = false
+   proposal.pendingAdmin = Address.fromString(ZERO_ADDRESS) 
+   // Clear out pending admins to be safe, although the UI should no longer use this.
+   proposal.admin = event.params.newAdmin
    proposal.save()
 }
 

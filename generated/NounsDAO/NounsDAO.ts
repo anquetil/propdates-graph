@@ -404,9 +404,9 @@ export class VotingPeriodSet__Params {
   }
 }
 
-export class Contract extends ethereum.SmartContract {
-  static bind(address: Address): Contract {
-    return new Contract("Contract", address);
+export class NounsDAO extends ethereum.SmartContract {
+  static bind(address: Address): NounsDAO {
+    return new NounsDAO("NounsDAO", address);
   }
 
   admin(): Address {

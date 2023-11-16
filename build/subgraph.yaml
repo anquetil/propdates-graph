@@ -4,19 +4,18 @@ schema:
 dataSources:
   - kind: ethereum
     name: Propdates
-    network: mainnet
+    network: sepolia
     source:
-      address: "0x94b4fb16893C0Fb4E470eEf2559C24FD87FEd5F1"
+      address: "0xb06813FbE1Ff52DCef4F425bD5b4f17a79D7b4D8"
       abi: Propdates
-      startBlock: 17514928
+      startBlock: 4704334
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - PostUpdate
-        - PropUpdateAdminTransferStarted
-        - PropUpdateAdminTransfered
+        - PropUpdate
+        - Proposal
       abis:
         - name: Propdates
           file: Propdates/abis/Propdates.json
@@ -29,25 +28,50 @@ dataSources:
           handler: handlePropUpdateAdminTransfered
       file: Propdates/Propdates.wasm
   - kind: ethereum
-    name: Contract
-    network: mainnet
+    name: PropdatesV2
+    network: sepolia
     source:
-      address: "0x6f3E6272A167e8AcCb32072d08E0957F9c79223d"
-      abi: Contract
-      startBlock: 12985453
+      address: "0x4675C7e5BaAFBFFbca748158bEcBA61ef3b0a263"
+      abi: PropdatesV2
+      startBlock: 4704334
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - ProposalCreated
-        - ProposalExecuted
+        - PropUpdate
+        - Proposal
       abis:
-        - name: Contract
-          file: Contract/abis/Contract.json
+        - name: PropdatesV2
+          file: PropdatesV2/abis/PropdatesV2.json
+      eventHandlers:
+        - event: PostUpdate(indexed uint256,indexed bool,string)
+          handler: handlePostUpdate
+        - event: PropUpdateAdminTransfered(indexed uint256,indexed address,indexed address)
+          handler: handlePropUpdateAdminTransfered
+        - event: PropUpdateAdminRecovered(indexed uint256,indexed address,indexed address)
+          handler: handlePropUpdateAdminRecovered
+      file: PropdatesV2/PropdatesV2.wasm
+  - kind: ethereum
+    name: NounsDAO
+    network: sepolia
+    source:
+      address: "0x35d2670d7C8931AACdd37C89Ddcb0638c3c44A57"
+      abi: NounsDAO
+      startBlock: 3594849
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - PropUpdate
+        - Proposal
+      abis:
+        - name: NounsDAO
+          file: NounsDAO/abis/NounsDAO.json
       eventHandlers:
         - event: ProposalCreated(uint256,address,address[],uint256[],string[],bytes[],uint256,uint256,string)
           handler: handleProposalCreated
         - event: ProposalExecuted(uint256)
           handler: handleProposalExecuted
-      file: Contract/Contract.wasm
+      file: NounsDAO/NounsDAO.wasm

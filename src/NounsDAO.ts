@@ -2,7 +2,7 @@ import { Address, Bytes, BigInt, log } from "@graphprotocol/graph-ts"
 import {
    ProposalCreated as ProposalCreatedEvent,
    ProposalExecuted as ProposalExecutedEvent
-} from "../generated/Contract/Contract"
+} from "../generated/NounsDAO/NounsDAO"
 import {
    Proposal,
 } from "../generated/schema"
