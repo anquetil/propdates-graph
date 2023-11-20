@@ -10,6 +10,46 @@ import {
   BigInt
 } from "@graphprotocol/graph-ts";
 
+export class Initialized extends ethereum.Event {
+  get params(): Initialized__Params {
+    return new Initialized__Params(this);
+  }
+}
+
+export class Initialized__Params {
+  _event: Initialized;
+
+  constructor(event: Initialized) {
+    this._event = event;
+  }
+
+  get version(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+}
+
+export class OwnershipTransferred extends ethereum.Event {
+  get params(): OwnershipTransferred__Params {
+    return new OwnershipTransferred__Params(this);
+  }
+}
+
+export class OwnershipTransferred__Params {
+  _event: OwnershipTransferred;
+
+  constructor(event: OwnershipTransferred) {
+    this._event = event;
+  }
+
+  get previousOwner(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get newOwner(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+}
+
 export class PostUpdate extends ethereum.Event {
   get params(): PostUpdate__Params {
     return new PostUpdate__Params(this);
@@ -36,42 +76,16 @@ export class PostUpdate__Params {
   }
 }
 
-export class PropUpdateAdminTransferStarted extends ethereum.Event {
-  get params(): PropUpdateAdminTransferStarted__Params {
-    return new PropUpdateAdminTransferStarted__Params(this);
+export class PropUpdateAdminMigrated extends ethereum.Event {
+  get params(): PropUpdateAdminMigrated__Params {
+    return new PropUpdateAdminMigrated__Params(this);
   }
 }
 
-export class PropUpdateAdminTransferStarted__Params {
-  _event: PropUpdateAdminTransferStarted;
+export class PropUpdateAdminMigrated__Params {
+  _event: PropUpdateAdminMigrated;
 
-  constructor(event: PropUpdateAdminTransferStarted) {
-    this._event = event;
-  }
-
-  get propId(): BigInt {
-    return this._event.parameters[0].value.toBigInt();
-  }
-
-  get oldAdmin(): Address {
-    return this._event.parameters[1].value.toAddress();
-  }
-
-  get newAdmin(): Address {
-    return this._event.parameters[2].value.toAddress();
-  }
-}
-
-export class PropUpdateAdminTransfered extends ethereum.Event {
-  get params(): PropUpdateAdminTransfered__Params {
-    return new PropUpdateAdminTransfered__Params(this);
-  }
-}
-
-export class PropUpdateAdminTransfered__Params {
-  _event: PropUpdateAdminTransfered;
-
-  constructor(event: PropUpdateAdminTransfered) {
+  constructor(event: PropUpdateAdminMigrated) {
     this._event = event;
   }
 
@@ -114,6 +128,72 @@ export class PropUpdateAdminRecovered__Params {
   }
 }
 
+export class PropUpdateAdminTransferred extends ethereum.Event {
+  get params(): PropUpdateAdminTransferred__Params {
+    return new PropUpdateAdminTransferred__Params(this);
+  }
+}
+
+export class PropUpdateAdminTransferred__Params {
+  _event: PropUpdateAdminTransferred;
+
+  constructor(event: PropUpdateAdminTransferred) {
+    this._event = event;
+  }
+
+  get propId(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+
+  get oldAdmin(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+
+  get newAdmin(): Address {
+    return this._event.parameters[2].value.toAddress();
+  }
+}
+
+export class SuperAdminTransferred extends ethereum.Event {
+  get params(): SuperAdminTransferred__Params {
+    return new SuperAdminTransferred__Params(this);
+  }
+}
+
+export class SuperAdminTransferred__Params {
+  _event: SuperAdminTransferred;
+
+  constructor(event: SuperAdminTransferred) {
+    this._event = event;
+  }
+
+  get oldSuperAdmin(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get newSuperAdmin(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+}
+
+export class Upgraded extends ethereum.Event {
+  get params(): Upgraded__Params {
+    return new Upgraded__Params(this);
+  }
+}
+
+export class Upgraded__Params {
+  _event: Upgraded;
+
+  constructor(event: Upgraded) {
+    this._event = event;
+  }
+
+  get implementation(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+}
+
 export class PropdatesV2__propdateInfoResultValue0Struct extends ethereum.Tuple {
   get propUpdateAdmin(): Address {
     return this[0].toAddress();
@@ -148,22 +228,37 @@ export class PropdatesV2 extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
-  pendingPropUpdateAdmin(param0: BigInt): Address {
+  UPGRADE_INTERFACE_VERSION(): string {
     let result = super.call(
-      "pendingPropUpdateAdmin",
-      "pendingPropUpdateAdmin(uint256):(address)",
-      [ethereum.Value.fromUnsignedBigInt(param0)]
+      "UPGRADE_INTERFACE_VERSION",
+      "UPGRADE_INTERFACE_VERSION():(string)",
+      []
     );
+
+    return result[0].toString();
+  }
+
+  try_UPGRADE_INTERFACE_VERSION(): ethereum.CallResult<string> {
+    let result = super.tryCall(
+      "UPGRADE_INTERFACE_VERSION",
+      "UPGRADE_INTERFACE_VERSION():(string)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toString());
+  }
+
+  owner(): Address {
+    let result = super.call("owner", "owner():(address)", []);
 
     return result[0].toAddress();
   }
 
-  try_pendingPropUpdateAdmin(param0: BigInt): ethereum.CallResult<Address> {
-    let result = super.tryCall(
-      "pendingPropUpdateAdmin",
-      "pendingPropUpdateAdmin(uint256):(address)",
-      [ethereum.Value.fromUnsignedBigInt(param0)]
-    );
+  try_owner(): ethereum.CallResult<Address> {
+    let result = super.tryCall("owner", "owner():(address)", []);
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -201,34 +296,98 @@ export class PropdatesV2 extends ethereum.SmartContract {
       )
     );
   }
-}
 
-export class AcceptPropUpdateAdminCall extends ethereum.Call {
-  get inputs(): AcceptPropUpdateAdminCall__Inputs {
-    return new AcceptPropUpdateAdminCall__Inputs(this);
+  proxiableUUID(): Bytes {
+    let result = super.call("proxiableUUID", "proxiableUUID():(bytes32)", []);
+
+    return result[0].toBytes();
   }
 
-  get outputs(): AcceptPropUpdateAdminCall__Outputs {
-    return new AcceptPropUpdateAdminCall__Outputs(this);
+  try_proxiableUUID(): ethereum.CallResult<Bytes> {
+    let result = super.tryCall(
+      "proxiableUUID",
+      "proxiableUUID():(bytes32)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBytes());
+  }
+
+  superAdmin(): Address {
+    let result = super.call("superAdmin", "superAdmin():(address)", []);
+
+    return result[0].toAddress();
+  }
+
+  try_superAdmin(): ethereum.CallResult<Address> {
+    let result = super.tryCall("superAdmin", "superAdmin():(address)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 }
 
-export class AcceptPropUpdateAdminCall__Inputs {
-  _call: AcceptPropUpdateAdminCall;
+export class BatchTransferPropUpdateAdminsCall extends ethereum.Call {
+  get inputs(): BatchTransferPropUpdateAdminsCall__Inputs {
+    return new BatchTransferPropUpdateAdminsCall__Inputs(this);
+  }
 
-  constructor(call: AcceptPropUpdateAdminCall) {
+  get outputs(): BatchTransferPropUpdateAdminsCall__Outputs {
+    return new BatchTransferPropUpdateAdminsCall__Outputs(this);
+  }
+}
+
+export class BatchTransferPropUpdateAdminsCall__Inputs {
+  _call: BatchTransferPropUpdateAdminsCall;
+
+  constructor(call: BatchTransferPropUpdateAdminsCall) {
     this._call = call;
   }
 
-  get propId(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
+  get propIds(): Array<BigInt> {
+    return this._call.inputValues[0].value.toBigIntArray();
+  }
+
+  get newAdmins(): Array<Address> {
+    return this._call.inputValues[1].value.toAddressArray();
   }
 }
 
-export class AcceptPropUpdateAdminCall__Outputs {
-  _call: AcceptPropUpdateAdminCall;
+export class BatchTransferPropUpdateAdminsCall__Outputs {
+  _call: BatchTransferPropUpdateAdminsCall;
 
-  constructor(call: AcceptPropUpdateAdminCall) {
+  constructor(call: BatchTransferPropUpdateAdminsCall) {
+    this._call = call;
+  }
+}
+
+export class InitializeCall extends ethereum.Call {
+  get inputs(): InitializeCall__Inputs {
+    return new InitializeCall__Inputs(this);
+  }
+
+  get outputs(): InitializeCall__Outputs {
+    return new InitializeCall__Outputs(this);
+  }
+}
+
+export class InitializeCall__Inputs {
+  _call: InitializeCall;
+
+  constructor(call: InitializeCall) {
+    this._call = call;
+  }
+}
+
+export class InitializeCall__Outputs {
+  _call: InitializeCall;
+
+  constructor(call: InitializeCall) {
     this._call = call;
   }
 }
@@ -271,6 +430,126 @@ export class PostUpdateCall__Outputs {
   }
 }
 
+export class RecoverPropUpdateAdminCall extends ethereum.Call {
+  get inputs(): RecoverPropUpdateAdminCall__Inputs {
+    return new RecoverPropUpdateAdminCall__Inputs(this);
+  }
+
+  get outputs(): RecoverPropUpdateAdminCall__Outputs {
+    return new RecoverPropUpdateAdminCall__Outputs(this);
+  }
+}
+
+export class RecoverPropUpdateAdminCall__Inputs {
+  _call: RecoverPropUpdateAdminCall;
+
+  constructor(call: RecoverPropUpdateAdminCall) {
+    this._call = call;
+  }
+
+  get propId(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+
+  get newAdmin(): Address {
+    return this._call.inputValues[1].value.toAddress();
+  }
+}
+
+export class RecoverPropUpdateAdminCall__Outputs {
+  _call: RecoverPropUpdateAdminCall;
+
+  constructor(call: RecoverPropUpdateAdminCall) {
+    this._call = call;
+  }
+}
+
+export class RenounceOwnershipCall extends ethereum.Call {
+  get inputs(): RenounceOwnershipCall__Inputs {
+    return new RenounceOwnershipCall__Inputs(this);
+  }
+
+  get outputs(): RenounceOwnershipCall__Outputs {
+    return new RenounceOwnershipCall__Outputs(this);
+  }
+}
+
+export class RenounceOwnershipCall__Inputs {
+  _call: RenounceOwnershipCall;
+
+  constructor(call: RenounceOwnershipCall) {
+    this._call = call;
+  }
+}
+
+export class RenounceOwnershipCall__Outputs {
+  _call: RenounceOwnershipCall;
+
+  constructor(call: RenounceOwnershipCall) {
+    this._call = call;
+  }
+}
+
+export class SetSuperAdminCall extends ethereum.Call {
+  get inputs(): SetSuperAdminCall__Inputs {
+    return new SetSuperAdminCall__Inputs(this);
+  }
+
+  get outputs(): SetSuperAdminCall__Outputs {
+    return new SetSuperAdminCall__Outputs(this);
+  }
+}
+
+export class SetSuperAdminCall__Inputs {
+  _call: SetSuperAdminCall;
+
+  constructor(call: SetSuperAdminCall) {
+    this._call = call;
+  }
+
+  get _newSuperAdmin(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class SetSuperAdminCall__Outputs {
+  _call: SetSuperAdminCall;
+
+  constructor(call: SetSuperAdminCall) {
+    this._call = call;
+  }
+}
+
+export class TransferOwnershipCall extends ethereum.Call {
+  get inputs(): TransferOwnershipCall__Inputs {
+    return new TransferOwnershipCall__Inputs(this);
+  }
+
+  get outputs(): TransferOwnershipCall__Outputs {
+    return new TransferOwnershipCall__Outputs(this);
+  }
+}
+
+export class TransferOwnershipCall__Inputs {
+  _call: TransferOwnershipCall;
+
+  constructor(call: TransferOwnershipCall) {
+    this._call = call;
+  }
+
+  get newOwner(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class TransferOwnershipCall__Outputs {
+  _call: TransferOwnershipCall;
+
+  constructor(call: TransferOwnershipCall) {
+    this._call = call;
+  }
+}
+
 export class TransferPropUpdateAdminCall extends ethereum.Call {
   get inputs(): TransferPropUpdateAdminCall__Inputs {
     return new TransferPropUpdateAdminCall__Inputs(this);
@@ -301,6 +580,70 @@ export class TransferPropUpdateAdminCall__Outputs {
   _call: TransferPropUpdateAdminCall;
 
   constructor(call: TransferPropUpdateAdminCall) {
+    this._call = call;
+  }
+}
+
+export class UpgradeToAndCallCall extends ethereum.Call {
+  get inputs(): UpgradeToAndCallCall__Inputs {
+    return new UpgradeToAndCallCall__Inputs(this);
+  }
+
+  get outputs(): UpgradeToAndCallCall__Outputs {
+    return new UpgradeToAndCallCall__Outputs(this);
+  }
+}
+
+export class UpgradeToAndCallCall__Inputs {
+  _call: UpgradeToAndCallCall;
+
+  constructor(call: UpgradeToAndCallCall) {
+    this._call = call;
+  }
+
+  get newImplementation(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get data(): Bytes {
+    return this._call.inputValues[1].value.toBytes();
+  }
+}
+
+export class UpgradeToAndCallCall__Outputs {
+  _call: UpgradeToAndCallCall;
+
+  constructor(call: UpgradeToAndCallCall) {
+    this._call = call;
+  }
+}
+
+export class WithdrawCall extends ethereum.Call {
+  get inputs(): WithdrawCall__Inputs {
+    return new WithdrawCall__Inputs(this);
+  }
+
+  get outputs(): WithdrawCall__Outputs {
+    return new WithdrawCall__Outputs(this);
+  }
+}
+
+export class WithdrawCall__Inputs {
+  _call: WithdrawCall;
+
+  constructor(call: WithdrawCall) {
+    this._call = call;
+  }
+
+  get _to(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class WithdrawCall__Outputs {
+  _call: WithdrawCall;
+
+  constructor(call: WithdrawCall) {
     this._call = call;
   }
 }

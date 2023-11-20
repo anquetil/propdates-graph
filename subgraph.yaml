@@ -47,8 +47,8 @@ dataSources:
       eventHandlers:
         - event: PostUpdate(indexed uint256,indexed bool,string)
           handler: handlePostUpdate
-        - event: PropUpdateAdminTransfered(indexed uint256,indexed address,indexed address)
-          handler: handlePropUpdateAdminTransfered
+        - event: PropUpdateAdminTransferred(indexed uint256,indexed address,indexed address)
+          handler: handlePropUpdateAdminTransferred
         - event: PropUpdateAdminRecovered(indexed uint256,indexed address,indexed address)
           handler: handlePropUpdateAdminRecovered
       file: ./src/propdatesV2.ts
