@@ -2,7 +2,8 @@ import { Address, BigInt, log } from "@graphprotocol/graph-ts";
 import {
   PostUpdate as PostUpdateEvent,
   PropUpdateAdminRecovered as PropUpdateAdminRecoveredEvent,
-  PropUpdateAdminTransferred as PropUpdateAdminTransferredEvent
+  PropUpdateAdminTransferred as PropUpdateAdminTransferredEvent,
+   PropUpdateAdminMigrated as PropUpdateAdminMigratedEvent
 } from "../generated/PropdatesV2/PropdatesV2"
 import {
   PropUpdate,
@@ -49,6 +50,16 @@ export function handlePropUpdateAdminRecovered(
 
 export function handlePropUpdateAdminTransferred(
   event: PropUpdateAdminTransferredEvent
+): void {
+   let proposal = getProposal(event.params.propId)
+   proposal.transferPending = false
+   proposal.admin = event.params.newAdmin
+   proposal.pendingAdmin = Address.fromString(ZERO_ADDRESS)
+   proposal.save()
+}
+
+export function handlePropUpdateAdminMigrated(
+   event: PropUpdateAdminMigratedEvent
 ): void {
    let proposal = getProposal(event.params.propId)
    proposal.transferPending = false

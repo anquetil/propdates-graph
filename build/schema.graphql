@@ -1,4 +1,4 @@
-type PropUpdate @entity(immutable: true) {
+type PropUpdate @entity {
    id: ID!
    hash: Bytes!
    admin: Bytes! # address, at time of post
@@ -10,7 +10,7 @@ type PropUpdate @entity(immutable: true) {
    transactionHash: Bytes!
 }
 
-type Proposal @entity(immutable: false){
+type Proposal @entity {
    id: String! # propId
    title: String! # propName
    admin: Bytes! # address

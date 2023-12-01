@@ -10,8 +10,8 @@
          "address": "0x6f3E6272A167e8AcCb32072d08E0957F9c79223d"
       },
       "PropdatesV2": {
-         "address": "0x4675C7e5BaAFBFFbca748158bEcBA61ef3b0a263",
-         "startBlock": 17514928
+         "address": "0xa5Bf9A9b8f60CFD98b1cCB592f2F9F37Bb0033a4",
+         "startBlock": 18689732
       }
    },
    "sepolia": {
@@ -24,8 +24,8 @@
          "startBlock": 3594849
       },
       "PropdatesV2": {
-         "address": "0x4675C7e5BaAFBFFbca748158bEcBA61ef3b0a263",
-         "startBlock": 17514928
+         "address": "0xa5Bf9A9b8f60CFD98b1cCB592f2F9F37Bb0033a4",
+         "startBlock": 4736396
       }
    }
 }

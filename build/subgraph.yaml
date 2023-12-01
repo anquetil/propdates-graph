@@ -4,11 +4,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: Propdates
-    network: sepolia
+    network: mainnet
     source:
-      address: "0xb06813FbE1Ff52DCef4F425bD5b4f17a79D7b4D8"
+      address: "0x94b4fb16893C0Fb4E470eEf2559C24FD87FEd5F1"
       abi: Propdates
-      startBlock: 4704334
+      startBlock: 17514928
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -29,11 +29,11 @@ dataSources:
       file: Propdates/Propdates.wasm
   - kind: ethereum
     name: PropdatesV2
-    network: sepolia
+    network: mainnet
     source:
-      address: "0x4675C7e5BaAFBFFbca748158bEcBA61ef3b0a263"
+      address: "0xa5Bf9A9b8f60CFD98b1cCB592f2F9F37Bb0033a4"
       abi: PropdatesV2
-      startBlock: 4704334
+      startBlock: 18689732
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -51,14 +51,16 @@ dataSources:
           handler: handlePropUpdateAdminTransferred
         - event: PropUpdateAdminRecovered(indexed uint256,indexed address,indexed address)
           handler: handlePropUpdateAdminRecovered
+        - event: PropUpdateAdminMigrated(indexed uint256,indexed address,indexed address)
+          handler: handlePropUpdateAdminMigrated
       file: PropdatesV2/PropdatesV2.wasm
   - kind: ethereum
     name: NounsDAO
-    network: sepolia
+    network: mainnet
     source:
-      address: "0x35d2670d7C8931AACdd37C89Ddcb0638c3c44A57"
+      address: "0x6f3E6272A167e8AcCb32072d08E0957F9c79223d"
       abi: NounsDAO
-      startBlock: 3594849
+      startBlock: 12985453
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
